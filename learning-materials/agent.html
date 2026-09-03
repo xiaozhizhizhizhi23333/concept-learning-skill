@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>概念学习资料：Agent（智能体）</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2733; --sub:#5a6572;
+    --accent:#2f6fed; --accent-soft:#eaf1ff; --line:#e5e9f0;
+    --tag:#0d9f6e; --tag-soft:#e7f7f0; --warn:#c77d1a; --warn-soft:#fdf3e3;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px;}
+  header{background:linear-gradient(135deg,#2f6fed,#5a8bff);color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;}
+  header h1{margin:0 0 8px;font-size:26px;}
+  header .meta{font-size:14px;opacity:.92;}
+  .badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:2px 12px;font-size:13px;margin-right:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin-bottom:20px;}
+  .card h2{font-size:20px;margin:0 0 12px;padding-bottom:10px;border-bottom:2px solid var(--accent-soft);color:var(--ink);}
+  .card h2 .num{display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;background:var(--accent);color:#fff;border-radius:8px;font-size:15px;margin-right:10px;vertical-align:1px;}
+  ul,ol{margin:8px 0;padding-left:22px;}
+  li{margin:6px 0;}
+  .goal li{font-weight:600;}
+  .q{background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  .scene{background:var(--tag-soft);border-left:4px solid var(--tag);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  .warn{background:var(--warn-soft);border-left:4px solid var(--warn);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:#f2f5fa;}
+  code{background:#eef2f8;border-radius:4px;padding:1px 6px;font-family:"SFMono-Regular",Consolas,monospace;font-size:14px;color:#c7254e;}
+  a{color:var(--accent);text-decoration:none;word-break:break-all;}
+  a:hover{text-decoration:underline;}
+  .src li{margin:8px 0;}
+  .ans{color:var(--tag);font-weight:600;}
+  .foot{text-align:center;color:var(--sub);font-size:13px;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Agent（智能体）</h1>
+    <div class="meta">
+      <span class="badge">概念学习资料</span>
+      <span class="badge">AI Agent 基础</span>
+      <div style="margin-top:6px;">由「概念学习资料生成器」Skill 生成 · 已人工核查</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <h2><span class="num">1</span>学习目标</h2>
+    <ul class="goal">
+      <li>能用一句话解释什么是 Agent，并说清它与"普通大模型 / 聊天机器人"的本质区别。</li>
+      <li>能说出 Agent 至少 4 个核心组成（大脑、工具、记忆、规划循环、环境反馈）。</li>
+      <li>能举出一个具体应用场景，并说出 Agent 至少一个使用边界或风险。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">2</span>核心问题（带着问题读）</h2>
+    <div class="q">一个只会"回答问题"的大模型，凭什么被称为"智能体"？它到底多了哪一步？</div>
+    <div class="q">如果 Agent 用到了一个错误的工具结果，它会怎样？这引出了什么关键设计？</div>
+    <div class="q">Agent 的"自主性"一定是好事吗？</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">3</span>个人解释</h2>
+    <p><strong>Agent（智能体）就是一个"能自己动手做事的 AI"。</strong>普通的大模型只会"想"和"说"——你问它，它回一段文字，仅此而已；而 Agent 会"想 → 做 → 看结果 → 再调整"，循环往复，直到把任务完成。</p>
+    <p>它的核心思路是：把大模型当作<strong>大脑</strong>，再给它装上"手脚"（工具）和"记事本"（记忆），让它能查资料、跑代码、读写文件、调用外部服务，并根据每一次行动的结果决定下一步。</p>
+    <p>打个比方（个人理解）：普通大模型像一位只能口述方案的顾问；Agent 则像一位能自己查资料、动手执行、遇到问题自己修正的实习生。</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">4</span>核心机制 / 组成</h2>
+    <table>
+      <tr><th>组成</th><th>作用</th><th>类比</th></tr>
+      <tr><td><strong>大脑</strong>（大模型 LLM）</td><td>理解任务、推理、规划步骤、做决策</td><td>人的大脑</td></tr>
+      <tr><td><strong>工具</strong>（Tools / 函数调用）</td><td>执行具体动作：搜索、跑代码、读写文件、调 API</td><td>人的手和脚</td></tr>
+      <tr><td><strong>记忆</strong>（Memory）</td><td>短期靠"上下文窗口"，长期靠外部存储（如向量库）</td><td>人的记事本</td></tr>
+      <tr><td><strong>规划与循环</strong>（如 ReAct）</td><td>在"思考下一步"与"执行并观察结果"之间循环</td><td>边做边想的做事习惯</td></tr>
+      <tr><td><strong>环境与反馈</strong>（Ground Truth）</td><td>工具返回的真实结果，是纠错、判断进度的依据</td><td>外界的真实反应</td></tr>
+    </table>
+    <p>其中 <strong>ReAct</strong>（Reasoning + Acting）是一种经典范式：模型先"思考"该做什么，再"行动"调用工具，然后"观察"工具结果，据此继续。这个"思考—行动—观察"的闭环，正是 Agent 区别于普通对话模型的关键。</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">5</span>一个具体应用场景</h2>
+    <div class="scene">
+      <strong>编程 Agent（自动修复 Bug）：</strong>你只说一句"帮我把这个报错修好"。它会：① 读代码定位问题；② 上网查这个报错的含义；③ 修改代码；④ 运行测试；⑤ 看测试结果——没通过就继续改，通过或遇到拦路时才来问你。Anthropic 官方文章提到，他们的编码 Agent 能自动完成涉及多个文件修改的任务（例如解决 SWE-bench 编程题）。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">6</span>易混淆点 / 使用边界</h2>
+    <div class="warn">
+      <strong>① Agent ≠ 聊天机器人：</strong>聊天机器人只输出文本，不调用工具、不改变外部状态；Agent 会"动手"。
+    </div>
+    <div class="warn">
+      <strong>② Agent ≠ 一定"完全自主"：</strong>Anthropic 把所有带工具调用的系统统称为"智能体类系统"，并进一步区分"工作流（流程由代码写死）"和"自主 Agent（由模型动态决定步骤）"。很多号称 Agent 的产品，其实只是工作流。
+    </div>
+    <div class="warn">
+      <strong>③ 边界与风险：</strong>自主性带来更高的 token 成本和"错误复利"——一步错可能步步错；还可能陷入无效循环、产生幻觉并基于幻觉行动。因此需要沙箱测试、护栏（guardrails）和最大步数等停止条件。
+    </div>
+    <div class="warn">
+      <strong>④ 能简单就别上 Agent：</strong>官方核心建议是"先用最简单的方案，必要时再增加复杂度"。不是所有任务都需要自主 Agent。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">7</span>自测问题</h2>
+    <ol>
+      <li>Agent 与普通大模型最本质的区别是什么？<br><span class="ans">答：</span>Agent 会调用工具、采取行动，并根据环境反馈循环迭代；普通模型只生成文本。</li>
+      <li>为什么工具返回的"真实结果"对 Agent 很重要？<br><span class="ans">答：</span>它是 Agent 判断进度、发现错误、避免幻觉的"事实依据"（ground truth）。</li>
+      <li>请说出 Agent 的一个风险或边界。<br><span class="ans">答：</span>高 token 成本、错误复利、无效循环、基于幻觉行动等（答出一点即可）。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">8</span>可核查资料来源</h2>
+    <ul class="src">
+      <li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Anthropic《Building Effective Agents》</a> —— 说明 Agent 的定义、"工作流 vs 自主 Agent"的区分，以及"何时该用 Agent"。</li>
+      <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct 论文《ReAct: Synergizing Reasoning and Acting in Language Models》</a> —— "思考—行动—观察"循环范式的原始出处。</li>
+      <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic 工程版《Building Effective Agents》</a> —— 提供了编码 Agent、客服 Agent 等落地案例与最佳实践。</li>
+    </ul>
+  </div>
+
+  <div class="foot">本资料由「概念学习资料生成器」Skill 按固定栏目生成，并经人工逐条核查（来源、机制、措辞）。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>概念学习资料：Skill（技能）</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2733; --sub:#5a6572;
+    --accent:#2f6fed; --accent-soft:#eaf1ff; --line:#e5e9f0;
+    --tag:#0d9f6e; --tag-soft:#e7f7f0; --warn:#c77d1a; --warn-soft:#fdf3e3;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px;}
+  header{background:linear-gradient(135deg,#2f6fed,#5a8bff);color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;}
+  header h1{margin:0 0 8px;font-size:26px;}
+  header .meta{font-size:14px;opacity:.92;}
+  .badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:2px 12px;font-size:13px;margin-right:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin-bottom:20px;}
+  .card h2{font-size:20px;margin:0 0 12px;padding-bottom:10px;border-bottom:2px solid var(--accent-soft);color:var(--ink);}
+  .card h2 .num{display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;background:var(--accent);color:#fff;border-radius:8px;font-size:15px;margin-right:10px;vertical-align:1px;}
+  ul,ol{margin:8px 0;padding-left:22px;}
+  li{margin:6px 0;}
+  .goal li{font-weight:600;}
+  .q{background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  .scene{background:var(--tag-soft);border-left:4px solid var(--tag);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  .warn{background:var(--warn-soft);border-left:4px solid var(--warn);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:#f2f5fa;}
+  code{background:#eef2f8;border-radius:4px;padding:1px 6px;font-family:"SFMono-Regular",Consolas,monospace;font-size:14px;color:#c7254e;}
+  a{color:var(--accent);text-decoration:none;word-break:break-all;}
+  a:hover{text-decoration:underline;}
+  .src li{margin:8px 0;}
+  .ans{color:var(--tag);font-weight:600;}
+  .foot{text-align:center;color:var(--sub);font-size:13px;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Skill（技能）</h1>
+    <div class="meta">
+      <span class="badge">概念学习资料</span>
+      <span class="badge">AI Agent 基础</span>
+      <div style="margin-top:6px;">由「概念学习资料生成器」Skill 生成 · 已人工核查</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <h2><span class="num">1</span>学习目标</h2>
+    <ul class="goal">
+      <li>能解释什么是 Skill，并说清它与"一次性提示词（Prompt）"的区别。</li>
+      <li>能说出一个 Skill 通常由哪些部分组成（元数据、指令正文、可选资源）。</li>
+      <li>能区分"项目级 Skill"与"用户级 Skill"的存放位置和作用范围。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">2</span>核心问题（带着问题读）</h2>
+    <div class="q">同样一句话，为什么"写进提示词"和"做成一个 Skill"，价值不一样？</div>
+    <div class="q">Skill 的 <code>description</code> 到底有什么用？为什么它对"能不能被自动触发"至关重要？</div>
+    <div class="q">项目级和用户级 Skill 各放在哪里？什么时候该用哪一种？</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">3</span>个人解释</h2>
+    <p><strong>Skill 就是"打包成文件、可随时被加载复用的任务操作手册"。</strong>它把"某类任务该怎么做"写清楚——包括流程、要点、注意事项——并存成一个 <code>SKILL.md</code> 文件。当 AI 需要做这类任务时，就"翻开"这本手册照着做，而不是每次都靠临时临场发挥。</p>
+    <p>打个比方（个人理解）：提示词像是"口头上交代一次"；Skill 像是"写成一本随时可查、可更新、可传给别人的操作手册"。因为它是文件，所以可以放进 Git 版本管理、可以沉淀、可以团队共享。</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">4</span>核心机制 / 组成</h2>
+    <table>
+      <tr><th>组成</th><th>说明</th></tr>
+      <tr><td><strong>YAML 元数据</strong>（<code>name</code> + <code>description</code>）</td><td>放在 <code>SKILL.md</code> 顶部。其中 <code>description</code> 说明"做什么、何时用"，是 AI 判断是否触发该 Skill 的匹配依据。</td></tr>
+      <tr><td><strong>指令正文</strong></td><td>写清适用场景、输入、步骤、输出结构、来源与自检要求等程序性知识。</td></tr>
+      <tr><td><strong>可选资源</strong></td><td>可附带脚本、模板、参考资料等，在需要时才被加载（"渐进式披露"，省上下文）。</td></tr>
+      <tr><td><strong>存放位置（作用域）</strong></td><td>用户级：<code>~/.workbuddy/skills/</code>，跨项目通用；项目级：<code>&lt;项目&gt;/.workbuddy/skills/</code>，只在本项目内生效、可随仓库共享。</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">5</span>一个具体应用场景</h2>
+    <div class="scene">
+      <strong>本作业就是活例子：</strong>把"概念学习资料怎么生成"这一套固定流程，沉淀成一个项目级 Skill（<code>.workbuddy/skills/concept-learning-generator/SKILL.md</code>）。以后只要说"学习概念：XXX"，它就能按同一套栏目（学习目标 → 核心问题 → 解释 → 机制 → 场景 → 辨析 → 自测 → 来源）自动生成新概念的资料，不用每次重新写提示词。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">6</span>易混淆点 / 使用边界</h2>
+    <div class="warn">
+      <strong>① Skill ≠ 一次性提示词：</strong>提示词只作用于一次对话；Skill 是可复用、可沉淀、可版本管理、可随仓库/团队共享的"工作流程资产"。
+    </div>
+    <div class="warn">
+      <strong>② 项目级 vs 用户级：</strong>项目级（<code>.workbuddy/skills/</code>）随项目仓库走、便于共享和作业提交；用户级（<code>~/.workbuddy/skills/</code>）只在你本机、跨项目通用。别把两者混放。
+    </div>
+    <div class="warn">
+      <strong>③ 边界：Skill 不是"让模型变聪明"，而是"把怎么做写清楚"。</strong>如果手册本身写得含糊、过时，执行效果也不会好——Skill 需要像代码一样持续维护。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">7</span>自测问题</h2>
+    <ol>
+      <li>Skill 与一次性提示词最核心的区别是什么？<br><span class="ans">答：</span>Skill 是可复用、可沉淀、可版本管理、可共享的流程资产；提示词只作用于一次对话。</li>
+      <li>SKILL.md 顶部的 <code>description</code> 有什么用？<br><span class="ans">答：</span>说明"做什么、何时用"，是 AI 判断是否触发该 Skill 的匹配依据。</li>
+      <li>项目级 Skill 放在哪个目录？<br><span class="ans">答：</span><code>&lt;项目&gt;/.workbuddy/skills/&lt;skill名&gt;/SKILL.md</code>。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">8</span>可核查资料来源</h2>
+    <ul class="src">
+      <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener">Anthropic Agent Skills 官方文档</a> —— 说明 Skill 是什么、YAML 元数据与"渐进式披露"的加载机制。</li>
+      <li><a href="https://www.anthropic.com/news/skills" target="_blank" rel="noopener">Anthropic《Introducing Agent Skills》</a> —— 官方介绍 Skills 的特性（可组合、可移植、按需加载）。</li>
+      <li><a href="https://agentskills.io/home" target="_blank" rel="noopener">Agent Skills 开放标准</a> —— Skills 开放格式的规范主页，含 SKILL.md 规范说明。</li>
+      <li><a href="https://www.workbuddy.cn/docs/workbuddy/Overview" target="_blank" rel="noopener">WorkBuddy 官方文档</a> —— 本项目所用 AI 工具关于 Skill、项目级配置的说明。</li>
+    </ul>
+  </div>
+
+  <div class="foot">本资料由「概念学习资料生成器」Skill 按固定栏目生成，并经人工逐条核查（来源、机制、措辞）。</div>
+</div>
+</body>
+</html>

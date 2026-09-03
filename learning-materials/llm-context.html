@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>概念学习资料：大模型的上下文</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2733; --sub:#5a6572;
+    --accent:#2f6fed; --accent-soft:#eaf1ff; --line:#e5e9f0;
+    --tag:#0d9f6e; --tag-soft:#e7f7f0; --warn:#c77d1a; --warn-soft:#fdf3e3;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px;}
+  header{background:linear-gradient(135deg,#2f6fed,#5a8bff);color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;}
+  header h1{margin:0 0 8px;font-size:26px;}
+  header .meta{font-size:14px;opacity:.92;}
+  .badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:2px 12px;font-size:13px;margin-right:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin-bottom:20px;}
+  .card h2{font-size:20px;margin:0 0 12px;padding-bottom:10px;border-bottom:2px solid var(--accent-soft);color:var(--ink);}
+  .card h2 .num{display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;background:var(--accent);color:#fff;border-radius:8px;font-size:15px;margin-right:10px;vertical-align:1px;}
+  ul,ol{margin:8px 0;padding-left:22px;}
+  li{margin:6px 0;}
+  .goal li{font-weight:600;}
+  .q{background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  .scene{background:var(--tag-soft);border-left:4px solid var(--tag);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  .warn{background:var(--warn-soft);border-left:4px solid var(--warn);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:#f2f5fa;}
+  code{background:#eef2f8;border-radius:4px;padding:1px 6px;font-family:"SFMono-Regular",Consolas,monospace;font-size:14px;color:#c7254e;}
+  a{color:var(--accent);text-decoration:none;word-break:break-all;}
+  a:hover{text-decoration:underline;}
+  .src li{margin:8px 0;}
+  .ans{color:var(--tag);font-weight:600;}
+  .foot{text-align:center;color:var(--sub);font-size:13px;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>大模型的上下文（Context）</h1>
+    <div class="meta">
+      <span class="badge">概念学习资料</span>
+      <span class="badge">大模型基础</span>
+      <div style="margin-top:6px;">由「概念学习资料生成器」Skill 生成 · 已人工核查</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <h2><span class="num">1</span>学习目标</h2>
+    <ul class="goal">
+      <li>能解释"上下文窗口"是什么，并说明为什么大模型"没有长期记忆"。</li>
+      <li>能说出上下文里通常包含的至少 3 类内容。</li>
+      <li>能说明"上下文越长越好"为什么是错的，并举出一个相关现象或方法。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">2</span>核心问题（带着问题读）</h2>
+    <div class="q">模型"记得"你上一句话——它真的是"记住"了吗？</div>
+    <div class="q">当你把一份很长的文档发给模型让它总结，它到底"看"到了什么？</div>
+    <div class="q">上下文窗口塞得越满，效果一定越好吗？</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">3</span>个人解释</h2>
+    <p><strong>大模型的"上下文"，可以理解为它一次性"看得见"的全部文字范围</strong>——就像一个只能容纳固定字数的"工作台"或"草稿纸"。</p>
+    <p>模型本身没有硬盘式的长期记忆：每次对话，它其实是把<strong>系统提示、你们的历史聊天、你贴进去的资料、以及它调用工具得到的结果</strong>，全部拼成一大段文字，一次性塞进这个工作台里再"读"。工作台装满了，最前面的内容就会被挤出去，模型就"看不见"了。这也是为什么长对话里模型会"忘记"开头说的话。</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">4</span>核心机制 / 组成</h2>
+    <table>
+      <tr><th>要点</th><th>说明</th></tr>
+      <tr><td><strong>上下文窗口</strong>（Context Window）</td><td>模型单次能处理的最大 token 数（不同模型可能是 128k、200k 甚至更多）。</td></tr>
+      <tr><td><strong>Token</strong>（分词单位）</td><td>不是"字数"。英文一个单词约 1 个 token，中文一个字约 1–2 个 token。</td></tr>
+      <tr><td><strong>上下文的构成</strong></td><td>系统提示词 + 历史消息 + 上传/检索的资料 + 工具返回结果。</td></tr>
+      <tr><td><strong>注意力与"位置"</strong></td><td>模型对不同位置的关注度不同，长文本里中段信息容易被"淹没"。</td></tr>
+      <tr><td><strong>突破窗口的方法</strong></td><td>用检索（RAG）只把最相关的几段放进窗口，或对上下文做压缩/摘要。</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">5</span>一个具体应用场景</h2>
+    <div class="scene">
+      <strong>RAG（检索增强生成）：</strong>当资料远超窗口时，不把所有内容都塞进上下文，而是先检索出最相关的片段，只把这几段放进上下文让模型回答。例如一个"问大学规章制度"的助手，背后有数万字的文件，它每次只把跟问题最相关的几条规则送进上下文——既省 token，又更准确、更少幻觉。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">6</span>易混淆点 / 使用边界</h2>
+    <div class="warn">
+      <strong>① "上下文" ≠ 模型的长期记忆：</strong>模型参数里存的不是"关于你"的记忆。所谓"记住"，只是这段对话还留在窗口里；一旦超出窗口，就会被"遗忘"。这也是为什么跨会话它通常不记得你。
+    </div>
+    <div class="warn">
+      <strong>② 上下文越长 ≠ 越好：</strong>有研究（"Lost in the Middle"）发现，信息放在长上下文中间时，模型反而容易"漏看"；同时长上下文更慢、更贵。
+    </div>
+    <div class="warn">
+      <strong>③ Token ≠ 字数：</strong>中英文换算不同，别把"10 万 token"误当成"10 万字"。
+    </div>
+    <div class="warn">
+      <strong>④ 边界与隐私：</strong>窗口满了会截断/遗忘旧内容；而敏感信息一旦进入上下文，就会被模型"读到"，因此要注意隐私保护。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">7</span>自测问题</h2>
+    <ol>
+      <li>为什么长对话里模型会"忘记"开头说的话？<br><span class="ans">答：</span>超出上下文窗口上限，最前面的旧内容被截断/挤出窗口。</li>
+      <li>上下文里通常包含哪几类内容？<br><span class="ans">答：</span>系统提示、历史消息、上传/检索的资料、工具返回结果等。</li>
+      <li>"上下文越长越好"错在哪？<br><span class="ans">答：</span>存在"迷失在中间"现象（中段信息易被漏看），且成本更高、速度更慢。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">8</span>可核查资料来源</h2>
+    <ul class="src">
+      <li><a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener">OpenAI Tokenizer</a> —— 可在线查看一段文本是如何被切分成 token 的，直观理解"token ≠ 字数"。</li>
+      <li><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">论文《Lost in the Middle》</a> —— 说明长上下文中"中间信息容易被忽略"的现象。</li>
+      <li><a href="https://platform.openai.com/docs/models" target="_blank" rel="noopener">OpenAI Models 文档</a> —— 可查看不同模型对应的上下文窗口大小（token 上限）。</li>
+    </ul>
+  </div>
+
+  <div class="foot">本资料由「概念学习资料生成器」Skill 按固定栏目生成，并经人工逐条核查（来源、机制、措辞）。</div>
+</div>
+</body>
+</html>
