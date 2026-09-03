@@ -81,6 +81,14 @@ concept-learning-skill/
 
 ---
 
+## 七、遇到的问题与解决方式（过程记录）
+
+1. **GitHub CLI 安装失败**：通过 winget 安装时因 Windows 符号链接权限报错。解决：从 winget 已下载的安装包中手动解压出 `gh.exe` 使用。
+2. **`git push` 无法直连**：本机网络环境下 `github.com` 的 git 通道无法建立连接（CONNECT 隧道返回 502 / 连接超时）。解决：改用 `api.github.com` 的 GitHub REST API（Git Data API）将本地提交历史原样推送到远程仓库，作者、时间戳与本地提交一致。
+3. **GitHub 设备授权被拦截**：设备授权接口（github.com/login/device/code）请求被网络重置。解决：改用浏览器创建个人访问令牌（PAT）完成认证，令牌仅用于本次推送、未写入任何仓库文件，使用后已删除/可随时在 GitHub 设置中吊销。
+
+---
+
 ### 关于概念关系文件名的说明
 
 作业示例目录中写的是 `concept-relationship.html`，但作业正文要求"在 `concept-relationship.md` 中说明"。由于 Mermaid 图在 Markdown 中可被 GitHub 原生渲染，且正文明确指定了 `.md`，本仓库采用 `concept-relationship.md`。
