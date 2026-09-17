@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零基础编程学习计划表 · Python 数据分析方向</title>
+<style>
+  :root{
+    --bg:#F7F6F3; --card:#FFFFFF; --text:#2C2C2A; --muted:#5F5E5A; --hint:#888780;
+    --line:#E4E2DB; --line2:#D3D1C7;
+    --blue-f:#E6F1FB; --blue-s:#185FA5; --blue-t:#0C447C;
+    --teal-f:#E1F5EE; --teal-s:#0F6E56; --teal-t:#085041;
+    --amber-f:#FAEEDA; --amber-s:#854F0B; --amber-t:#633806;
+    --purple-f:#EEEDFE; --purple-s:#534AB7; --purple-t:#3C3489;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:32px 20px 64px; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:14px; line-height:1.65;
+  }
+  .wrap{max-width:920px; margin:0 auto;}
+  header{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px 28px; margin-bottom:18px;}
+  h1{font-size:22px; font-weight:600; margin:0 0 6px;}
+  .sub{color:var(--muted); font-size:13px; margin:0;}
+  .route{display:inline-block; margin-top:12px; padding:4px 12px; background:var(--blue-f); color:var(--blue-t); border-radius:999px; font-size:12px;}
+  .cards{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .card .k{font-size:12px; color:var(--hint); margin-bottom:4px;}
+  .card .v{font-size:18px; font-weight:600; color:var(--text);}
+  .card .u{font-size:12px; color:var(--muted); font-weight:400;}
+  section{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:24px 28px; margin-bottom:18px;}
+  h2{font-size:16px; font-weight:600; margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--line);}
+  h3{font-size:14px; font-weight:600; margin:0 0 4px;}
+  .progress-top{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
+  .bar{flex:1; height:8px; background:#EFEDE6; border-radius:999px; overflow:hidden;}
+  .bar span{display:block; height:100%; width:0; background:#1D9E75; border-radius:999px; transition:width .25s;}
+  .pct{font-size:13px; color:var(--muted); white-space:nowrap;}
+  .reset{font-size:12px; color:var(--hint); background:none; border:1px solid var(--line2); border-radius:6px; padding:4px 10px; cursor:pointer;}
+  .reset:hover{color:var(--text); border-color:var(--muted);}
+  .rhythm{display:grid; grid-template-columns:repeat(7,1fr); gap:8px;}
+  .day{background:#FAF9F6; border:1px solid var(--line); border-radius:10px; padding:12px 10px; text-align:center;}
+  .day .d{font-size:12px; color:var(--hint); margin-bottom:6px;}
+  .day .min{font-size:13px; font-weight:600; margin-bottom:4px;}
+  .day .what{font-size:12px; color:var(--muted); line-height:1.5;}
+  .day.rest{background:#F1EFE8;}
+  .stage{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:14px;}
+  .stage-head{padding:14px 18px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;}
+  .stage-head .t{font-size:15px; font-weight:600;}
+  .stage-head .w{font-size:12px; color:var(--muted);}
+  .stage-head .goal{font-size:12px; color:var(--muted); margin-left:auto;}
+  .s1 .stage-head{background:var(--blue-f);} .s1 .t{color:var(--blue-t);}
+  .s2 .stage-head{background:var(--teal-f);} .s2 .t{color:var(--teal-t);}
+  .s3 .stage-head{background:var(--amber-f);} .s3 .t{color:var(--amber-t);}
+  .s4 .stage-head{background:var(--purple-f);} .s4 .t{color:var(--purple-t);}
+  .week{display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--line); align-items:flex-start;}
+  .week.done{background:#F6F8F4;}
+  .week.done .wk-title{text-decoration:line-through; color:var(--hint);}
+  .week input{margin-top:4px; width:15px; height:15px; cursor:pointer; accent-color:#1D9E75; flex:none;}
+  .wbody{flex:1; min-width:0;}
+  .wk-title{font-size:13.5px; font-weight:600; margin-bottom:6px;}
+  .wk-title em{font-style:normal; color:var(--hint); font-weight:400; margin-right:8px; font-size:12px;}
+  .row{font-size:13px; color:var(--muted); margin-bottom:3px;}
+  .row b{color:var(--text); font-weight:500;}
+  .milestone{margin-top:6px; font-size:12px; color:#0F6E56; background:#F2F8F4; border-left:2px solid #1D9E75; padding:4px 10px; border-radius:0 6px 6px 0; display:inline-block;}
+  ul.clean{margin:0; padding-left:20px;}
+  ul.clean li{margin-bottom:8px; color:var(--muted);}
+  ul.clean li b{color:var(--text); font-weight:500;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{font-size:12px; color:var(--hint); font-weight:500; background:#FAF9F6;}
+  td a{color:var(--blue-s); text-decoration:none; word-break:break-all;}
+  td a:hover{text-decoration:underline;}
+  .tagline{font-size:12px; color:var(--hint); margin-top:10px;}
+  .tip{background:#FAF9F6; border:1px solid var(--line); border-radius:10px; padding:14px 18px; font-size:13px; color:var(--muted);}
+  .tip b{color:var(--text); font-weight:500;}
+  footer{text-align:center; font-size:12px; color:var(--hint); margin-top:24px;}
+  @media (max-width:760px){
+    .cards{grid-template-columns:repeat(2,1fr);}
+    .rhythm{grid-template-columns:repeat(2,1fr);}
+    .stage-head .goal{margin-left:0; width:100%;}
+  }
+  @media print{
+    body{background:#fff; padding:0;}
+    .reset,.progress-top{display:none;}
+    section{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>零基础编程学习计划表</h1>
+    <p class="sub">为王涵莹定制 · 广告学专业 · 每周投入 3 小时以内</p>
+    <span class="route">路线：Python → 数据分析与可视化</span>
+  </header>
+
+  <div class="cards">
+    <div class="card"><div class="k">总周期</div><div class="v">14 <span class="u">周</span></div></div>
+    <div class="card"><div class="k">每周投入</div><div class="v">2.5 <span class="u">小时</span></div></div>
+    <div class="card"><div class="k">单次时长</div><div class="v">25 <span class="u">分钟</span></div></div>
+    <div class="card"><div class="k">最终产出</div><div class="v">1 <span class="u">份作品</span></div></div>
+  </div>
+
+  <section>
+    <h2>学习进度</h2>
+    <div class="progress-top">
+      <div class="bar"><span id="bar"></span></div>
+      <div class="pct" id="pct">已完成 0 / 14 周</div>
+      <button class="reset" id="reset">重置进度</button>
+    </div>
+    <p class="tagline">勾选每一周右侧的方框即可记录进度，进度会自动保存在你的电脑上（浏览器本地存储）。</p>
+  </section>
+
+  <section>
+    <h2>每周固定节奏（6 天 × 25 分钟）</h2>
+    <div class="rhythm">
+      <div class="day"><div class="d">周一</div><div class="min">25 分钟</div><div class="what">看教程<br>跟着敲示例</div></div>
+      <div class="day"><div class="d">周二</div><div class="min">25 分钟</div><div class="what">接着学<br>改代码试效果</div></div>
+      <div class="day"><div class="d">周三</div><div class="min">25 分钟</div><div class="what">做练习题<br>自己先写</div></div>
+      <div class="day"><div class="d">周四</div><div class="min">25 分钟</div><div class="what">做练习题<br>再写一遍</div></div>
+      <div class="day"><div class="d">周五</div><div class="min">25 分钟</div><div class="what">小挑战<br>不看答案做</div></div>
+      <div class="day"><div class="d">周六</div><div class="min">25 分钟</div><div class="what">整理笔记<br>存到 GitHub</div></div>
+      <div class="day rest"><div class="d">周日</div><div class="min">休息</div><div class="what">不碰代码<br>让脑子消化</div></div>
+    </div>
+    <p class="tagline">休息日很关键。学编程是"消化型"任务，连续硬扛不如有节奏地停一停。</p>
+  </section>
+
+  <section>
+    <h2>四个阶段 · 十四周详细安排</h2>
+
+    <div class="stage s1">
+      <div class="stage-head">
+        <span class="t">第一阶段 · 打基础</span>
+        <span class="w">第 1–2 周</span>
+        <span class="goal">目标：让程序跑起来，看得懂报错</span>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="1">
+        <div class="wbody">
+          <div class="wk-title"><em>第 1 周</em>环境与第一行代码</div>
+          <div class="row"><b>学：</b>装好 Python + Jupyter Notebook（装不上就先用在线的，别卡住）；print、变量、输入输出、注释</div>
+          <div class="row"><b>练：</b>写一个"自我介绍"程序；写一个 BMI 计算器（只算不判断）</div>
+          <div class="milestone">验收：能独立跑通一个程序，报错时不慌，会看错误信息的最后一行</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="2">
+        <div class="wbody">
+          <div class="wk-title"><em>第 2 周</em>数据与判断</div>
+          <div class="row"><b>学：</b>数字与字符串类型、运算、if / elif / else 条件判断</div>
+          <div class="row"><b>练：</b>成绩等级判断器（90 分以上优秀…）；BMI 计算器加上健康判断</div>
+          <div class="milestone">验收：能写出一个"会根据不同情况给不同结果"的小程序</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage s2">
+      <div class="stage-head">
+        <span class="t">第二阶段 · 会组织</span>
+        <span class="w">第 3–5 周</span>
+        <span class="goal">目标：从处理"一个"到处理"一批"</span>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="3">
+        <div class="wbody">
+          <div class="wk-title"><em>第 3 周</em>让程序重复干活</div>
+          <div class="row"><b>学：</b>for 循环、while 循环、range</div>
+          <div class="row"><b>练：</b>打印九九乘法表；计算 1 到 100 的和；把第 2 周的猜数字游戏补完整</div>
+          <div class="milestone">验收：能让程序自动重复执行，不用你手动复制粘贴</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="4">
+        <div class="wbody">
+          <div class="wk-title"><em>第 4 周</em>学会装数据</div>
+          <div class="row"><b>学：</b>列表、字典、遍历（这是数据分析的核心基本功）</div>
+          <div class="row"><b>练：</b>把 10 位同学的成绩存进列表，算出平均分、最高分、最低分</div>
+          <div class="milestone">验收：能处理一"批"数据，而不是一个数据</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="5">
+        <div class="wbody">
+          <div class="wk-title"><em>第 5 周</em>把代码打包成工具</div>
+          <div class="row"><b>学：</b>函数（def、参数、返回值）；try / except 简单错误处理</div>
+          <div class="row"><b>练：</b>把前几周的代码改写成函数；写一个"成绩统计函数"，输入任意成绩列表都能出结果</div>
+          <div class="milestone">验收：能把自己写过的代码变成可重复使用的小工具</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage s3">
+      <div class="stage-head">
+        <span class="t">第三阶段 · 玩数据</span>
+        <span class="w">第 6–10 周</span>
+        <span class="goal">目标：本阶段结束你能独立做图表分析</span>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="6">
+        <div class="wbody">
+          <div class="wk-title"><em>第 6 周</em>打开真实数据文件</div>
+          <div class="row"><b>学：</b>文件的读写、CSV 是什么格式</div>
+          <div class="row"><b>练：</b>找一份 CSV 数据（Excel 导出的也行），用 Python 读出来并打印前 5 行</div>
+          <div class="milestone">验收：能让 Python 打开你电脑里的真实数据文件</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="7">
+        <div class="wbody">
+          <div class="wk-title"><em>第 7 周</em>pandas 入门</div>
+          <div class="row"><b>学：</b>pandas 读取表格、查看行列、按条件筛选（相当于用代码操作 Excel）</div>
+          <div class="row"><b>练：</b>读一份数据，筛选出符合某个条件的行（比如"某类目下销售额大于 1000 的记录"）</div>
+          <div class="milestone">验收：会用代码完成"打开表格 → 挑出我要的行"</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="8">
+        <div class="wbody">
+          <div class="wk-title"><em>第 8 周</em>pandas 进阶</div>
+          <div class="row"><b>学：</b>分组统计 groupby、排序、缺失值处理</div>
+          <div class="row"><b>练：</b>按类别统计数量和平均值，做出一张汇总表</div>
+          <div class="milestone">验收：能从一堆原始数据里算出"结论表"</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="9">
+        <div class="wbody">
+          <div class="wk-title"><em>第 9 周</em>把数据画成图</div>
+          <div class="row"><b>学：</b>matplotlib 画柱状图、折线图、饼图；顺带解决中文显示乱码</div>
+          <div class="row"><b>练：</b>把第 8 周的汇总表画成 3 张图</div>
+          <div class="milestone">验收：产出的图表能直接放进作业或报告里</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="10">
+        <div class="wbody">
+          <div class="wk-title"><em>第 10 周</em>串成完整流程</div>
+          <div class="row"><b>学：</b>把"读数据 → 算数据 → 画图"连成一条完整流程</div>
+          <div class="row"><b>练：</b>找一份和广告/消费相关的公开数据，做一份一页纸的小分析</div>
+          <div class="milestone">验收：一份完整的"数据 + 图表"小报告（可以直接当统计课作业素材）</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage s4">
+      <div class="stage-head">
+        <span class="t">第四阶段 · 做项目</span>
+        <span class="w">第 11–14 周</span>
+        <span class="goal">目标：留下一个别人能看到的作品</span>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="11">
+        <div class="wbody">
+          <div class="wk-title"><em>第 11 周</em>选题与找数据</div>
+          <div class="row"><b>学：</b>数据从哪来——国家统计局、地方统计年鉴、公开数据集</div>
+          <div class="row"><b>做：</b>定一个你真感兴趣的题目（例如"西宁旅游消费"或"某类广告投放趋势"），把数据找齐</div>
+          <div class="milestone">验收：题目确定 + 数据到手，能顺利读进 pandas</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="12">
+        <div class="wbody">
+          <div class="wk-title"><em>第 12 周</em>先做出来，别追求完美</div>
+          <div class="row"><b>做：</b>把分析跑通，能出结果就行，丑一点没关系</div>
+          <div class="milestone">验收：项目能跑出结果，哪怕只是一张粗糙的图</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="13">
+        <div class="wbody">
+          <div class="wk-title"><em>第 13 周</em>打磨并上线</div>
+          <div class="row"><b>做：</b>整理代码、加注释、写一份简短说明，上传到 GitHub（你已经有仓库和 Skill 的经验了，直接复用）</div>
+          <div class="milestone">验收：GitHub 上能看到你的代码和结果</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <input type="checkbox" data-w="14">
+        <div class="wbody">
+          <div class="wk-title"><em>第 14 周</em>复盘与下一步</div>
+          <div class="row"><b>做：</b>写下"我学会了什么、哪里还卡、接下来想学什么"</div>
+          <div class="row"><b>看一看：</b>AI 应用方向（调用 AI 接口做小工具），这是你自然的下一站</div>
+          <div class="milestone">验收：一份学习总结 + 明确的下一步计划</div>
+        </div>
+      </div>
+    </div>
+    <p class="tagline">进度落后一两周很正常，不用重来。按周次往下走，别停在第一周反复"重新开始"。</p>
+  </section>
+
+  <section>
+    <h2>学习资源（都已核实可访问）</h2>
+    <table>
+      <thead><tr><th style="width:26%">用途</th><th style="width:34%">资源</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>主课程（推荐）</td><td><a href="https://higher.smartedu.cn/course/69b087fa95df98bb27ba1714">嵩天《Python语言程序设计》</a></td><td>北京理工大学，中国大学 MOOC 上选课人数最多的课，零基础友好、免费，配套练习多</td></tr>
+        <tr><td>第二参考</td><td><a href="https://liaoxuefeng.com">廖雪峰 Python 教程</a></td><td>中文最好的入门文字教程，"每天半小时"的节奏和你的计划完全吻合</td></tr>
+        <tr><td>查语法</td><td><a href="https://docs.python.org/zh-cn/3/">Python 官方中文文档</a></td><td>权威完整，不用通读，当字典查</td></tr>
+        <tr><td>速查</td><td><a href="https://www.runoob.com/python3/python3-tutorial.html">菜鸟教程 Python3</a></td><td>想快速看某个写法时用</td></tr>
+        <tr><td>免安装环境</td><td><a href="https://aistudio.baidu.com">百度 AI Studio</a></td><td>国内可访问的在线 Notebook，装环境失败时的备用方案</td></tr>
+        <tr><td>pandas</td><td><a href="https://pandas.pydata.org/docs/user_guide/10min.html">pandas 十分钟入门</a></td><td>第 7 周配合使用，官方文档</td></tr>
+        <tr><td>画图</td><td><a href="https://matplotlib.org/stable/tutorials/index.html">matplotlib 官方教程</a></td><td>第 9 周配合使用</td></tr>
+        <tr><td>找数据</td><td><a href="https://data.stats.gov.cn">国家统计局 · 国家数据</a></td><td>第 11 周选题时找公开数据用</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>五条学习原则</h2>
+    <ul class="clean">
+      <li><b>别看完再动手。</b>25 分钟里至少 15 分钟在敲代码。看视频看懂了不等于会写，手指记住才算数。</li>
+      <li><b>只学用得上的。</b>不背语法、不追求学全，忘了就查文档。学到能解决问题就往前走。</li>
+      <li><b>报错是正常的。</b>先看错误信息最后一行，看不懂就把错误信息连同代码一起问 AI。你以后会遇到几百次报错，这是日常不是失败。</li>
+      <li><b>AI 当助教，不当枪手。</b>先自己想 5 分钟、自己写一版，再让 AI 解释或者指出问题。直接让 AI 写完整答案，你会一直学不会——这一点你在上次作业里已经做得很好了。</li>
+      <li><b>每周存一次 GitHub。</b>把练习和笔记传上去，十四周后你就有了一条看得见的学习轨迹，也是作品集。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>四个常见坑</h2>
+    <div class="tip">
+      <p style="margin:0 0 10px"><b>坑一：囤课囤教程。</b>收藏≠学会。挑一门主课程跟完，比收藏二十门强得多。</p>
+      <p style="margin:0 0 10px"><b>坑二：卡在装环境。</b>第一周装不上就先用在线环境，先把代码写起来，环境以后再补。</p>
+      <p style="margin:0 0 10px"><b>坑三：担心数学和英语。</b>入门阶段用不到高深数学，代码里的英文单词翻来覆去就那几十个，一个月就眼熟了。</p>
+      <p style="margin:0"><b>坑四：同时学两门语言。</b>先把 Python 学到能做项目，再考虑第二门。同时开两条线基本都会烂尾。</p>
+    </div>
+  </section>
+
+  <footer>计划表 · 为王涵莹定制 · 共 14 周，每周约 2.5 小时</footer>
+</div>
+
+<script>
+(function(){
+  var KEY = 'py-learning-plan-progress-v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[type=checkbox][data-w]'));
+  var bar = document.getElementById('bar');
+  var pct = document.getElementById('pct');
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e){ return []; }
+  }
+  function save(list){
+    try { localStorage.setItem(KEY, JSON.stringify(list)); } catch(e){}
+  }
+  function render(){
+    var done = boxes.filter(function(b){ return b.checked; }).length;
+    var total = boxes.length;
+    bar.style.width = (total ? (done / total * 100) : 0) + '%';
+    pct.textContent = '已完成 ' + done + ' / ' + total + ' 周';
+    boxes.forEach(function(b){
+      var row = b.closest('.week');
+      if (row) row.classList.toggle('done', b.checked);
+    });
+  }
+  var saved = load();
+  boxes.forEach(function(b){
+    if (saved.indexOf(b.getAttribute('data-w')) > -1) b.checked = true;
+    b.addEventListener('change', function(){
+      var list = boxes.filter(function(x){ return x.checked; }).map(function(x){ return x.getAttribute('data-w'); });
+      save(list);
+      render();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function(){
+    boxes.forEach(function(b){ b.checked = false; });
+    save([]);
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

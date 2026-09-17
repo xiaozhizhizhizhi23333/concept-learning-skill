@@ -1,0 +1,7 @@
+{
+  "python.terminal.activateEnvironment": true,
+  "jupyter.askForKernelRestart": false,
+  "notebook.output.scrolling": true,
+  "notebook.lineNumbers": "on",
+  "files.autoSave": "afterDelay"
+}
